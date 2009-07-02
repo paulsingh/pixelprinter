@@ -199,11 +199,12 @@ module ShopifyAPI
   
   class TaxLine < ActiveResource::Base
      include PriceConversion
+     
      def to_liquid
        {
          'price'     => to_cents(price), 
          'rate'      => rate, 
-         'title'      => title
+         'title'     => title
        }
      end
    end  
