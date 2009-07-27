@@ -26,13 +26,20 @@ class PrintTemplate < ActiveRecord::Base
   end
     
   def check_syntax
-    REXML::Document.new("<body>#{body}</body>")
+    body_with_escaped_ampersands = body.gsub(/& /, '&amp;')
+    REXML::Document.new("<body>#{body_with_escaped_ampersands}</body>")
     parse
     return true
   rescue REXML::ParseException => e
-    rexml_msg = e.message.split("\n").first.gsub("#<REXML::ParseException: ", '').gsub(" (got \"body\")", '')
+    rexml_msg = e.message.split("\n").first
+    if rexml_msg =~ /REXML::ParseException: /
+      rexml_msg.gsub!("#<REXML::ParseException: ", '').gsub!(" (got \"body\")", '')
+    end
     return false, rexml_msg
-  rescue Liquid::SyntaxError => e
+  rescue RuntimeError => e
+    puts "runtime errrrrorrr"
+    return false, e.message
+  rescue Liquid::SyntaxError
     return false, e
   end
   

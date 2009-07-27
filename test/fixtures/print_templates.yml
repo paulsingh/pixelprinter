@@ -30,3 +30,8 @@ unclosed_tags:
   shop: germanbrownies
   name: Unclosed tags
   body: "<div>Blabla"
+  
+unescaped_ampersand:
+  shop: germanbrownies
+  name: Unescaped ampersand
+  body: "one & two"

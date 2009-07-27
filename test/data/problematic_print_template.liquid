@@ -1,0 +1,303 @@
+<style type="text/css" media="print">
+#holder {
+	width: 190mm;
+	height: 180mm;
+	margin: 0;
+	padding: 0;
+}
+
+#custDetails {
+	width: 120mm;
+	height: 45mm;
+	left: 0mm;
+	top: 0mm;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	float: left;
+}
+
+#logo {
+	width: 65mm;
+	height: 45mm;
+	top: 0mm;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	float: right;
+}
+
+#orderDetails {
+	width: 120mm;
+	height: 45mm;
+	left: 0mm;
+	top: 0mm;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	float: left;
+	border-top: 2px solid black;
+}
+
+#promoArea {
+	width: 61mm;
+	padding: 10px;
+	margin: 0;
+	position: relative;
+	float: right;
+	background: #cccccc;
+}
+
+#promoArea p, #promoArea td {
+	color: #000000;
+	font-size: 7pt;
+	padding: 0px;
+	margin: 0;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-decoration: none;
+}
+
+#labels {
+	width: 190mm;
+	margin: 0;
+	padding: 0;
+}
+
+#labelAddress {
+	width: 90mm;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	float: left;
+	border: 1px solid black;
+}
+
+p {
+	color: #000000;
+	font-size: 9pt;
+	padding: 0px;
+	margin: 0;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	text-decoration: none;
+}
+</style>
+
+<div id="holder">
+	<div id="custDetails"><p>Order date: <b>{{ created_at | date: "%d/%m/%y" }}</b></p>
+	<p>Invoice: <b>{{ order_number }}</b></p>
+	<p>&nbsp;</p>
+	<p><b>{{ shipping_address.name }}</b><br />
+	{% if shipping_address.company %}
+    	{{ shipping_address.company}}<br />
+  	{% endif %}
+  	{{ shipping_address.street }}<br />
+  	{{ shipping_address.city }}<br />
+  	{% if shipping_address.province %}
+  		{{ shipping_address.province }}<br />
+  	{% endif %}
+  	{{ shipping_address.zip | upcase }}<br />
+  	{{ shipping_address.country }}</p>
+	</div>
+	
+	<div id="logo">
+	  <img src="http://static.shopify.com/s/files/1/0000/8963/assets/fp_logo_invoice.png" alt="Feminine Plus" />
+	  <p style="margin: 0 0 5px 0;">
+	    PO Box 9798<br />
+	    NG10 9DH
+	  </p>
+	  <p style="margin: 0 0 5px 0;">
+	    <img src="http://static.shopify.com/s/files/1/0000/8963/assets/phone.gif" />
+	    0844 335 1993
+	  </p>
+	  <p style="margin: 0 0 5px 0;">orders@feminineplus.com</p>
+	  <p>www.feminineplus.com</p>
+	</div>
+	
+	<div id="orderDetails">
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  		<tr>
+    		<td height="8" colspan="3"></td>
+    	</tr>
+  		<tr>
+    		<td colspan="2">
+    		  <p>
+    		    <b>Item</b>
+    		  </p>
+    		</td>
+    		<td align="right">
+    		  <p>
+    		    <b>Price</b>
+    		  </p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td height="8" colspan="3"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" colspan="3" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8" colspan="3"></td>
+    	</tr>
+	{% for line_item in line_items %}
+		<tr>
+			<td width="5%" valign="top">
+			  <p>{{ line_item.quantity }}</p>
+			</td>
+			<td width="80%" valign="top">
+			  <p>{{ line_item.title }}</p>
+			</td>
+			<td width="15%" valign="top" align="right">
+			  <p>{{ line_item.price | money }}</p>
+			</td>
+		</tr>
+		<tr>
+  		<td height="8" colspan="3"></td>
+  	</tr>
+  	<tr>
+  		<td height="1" colspan="3" style="border-bottom: 1px solid #999999"></td>
+  	</tr>
+  	<tr>
+  		<td height="8" colspan="3"></td>
+  	</tr>
+	{% endfor %}
+		<tr>
+  		<td colspan="2" align="right">
+  		  <p>Shipping:&nbsp;&nbsp;&nbsp;</p>
+  		</td>
+  		<td align="right">
+  		  <p>{{ shipping_price | money }}</p>
+  		</td>
+  	</tr>
+  	<tr>
+  		<td height="8" colspan="3"></td>
+  	</tr>
+  	<tr>
+  		<td height="1" colspan="2"></td>
+  		<td height="1" style="border-bottom: 1px solid #999999"></td>
+  	</tr>
+  	<tr>
+  		<td height="8" colspan="3"></td>
+  	</tr>
+		<tr>
+    	<td colspan="2" align="right">
+    	  <p>Total:&nbsp;&nbsp;&nbsp;</p>
+    	</td>
+    	<td align="right">
+    	  <p>
+    	    <b>{{ total_price | money }}</b>
+    	  </p>
+    	</td>
+    </tr>
+	</table>	
+	</div>
+
+	<div id="promoArea">
+	<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  		<tr>
+    		<td valign="top">
+    		  <p>
+    		    <b>New at FemininePlus.com for {{ "now" | date: "%B" }}</b>
+    		  </p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td valign="top"><p>White Satin French Knickers &ndash £13.00</p></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+		<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td valign="top"><p>Black Satin French Knickers with Blue and Pink Lace Trim &ndash £13.00</p></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td valign="top"><p>Red Satin French Knickers with Lace Trim &ndash £13.00</p></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td valign="top"><p>White Satin French Knickers &ndash £13.00</p></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="1" style="border-bottom: 1px solid #999999"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td height="8"></td>
+    	</tr>
+    	<tr>
+    		<td valign="top"><p>For all our new items, check out our 'Latest Additions' collection at FemininePlus.com</p></td>
+    	</tr>
+	</table>
+	
+	
+	</div>
+</div>
+<div id="labels">
+	<div id="labelAddress"><table width="100%" cellpadding="15" cellspacing="0" border="0">
+	<tr>
+	<td valing="top"><p><b>{{ shipping_address.name }}</b><br />
+	{% if shipping_address.company %}
+    	{{ shipping_address.company}}<br />
+  	{% endif %}
+  	{{ shipping_address.street }}<br />
+  	{{ shipping_address.city }}<br />
+  	{% if shipping_address.province %}
+  		{{ shipping_address.province }}<br />
+  	{% endif %}
+  	{{ shipping_address.zip | upcase }}<br />
+  	{{ shipping_address.country }}</p></td>
+  	</tr>
+  	</table></div>
+</div>

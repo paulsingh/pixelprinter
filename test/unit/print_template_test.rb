@@ -49,6 +49,11 @@ class PrintTemplateTest < ActiveSupport::TestCase
         assert 1, tmpl.errors.size
         assert_equal "Missing end tag for 'div'", tmpl.errors.full_messages.to_sentence
       end
+      
+      should "not be invalid when encountering an unescaped ampersand with trailing space" do
+        tmpl = print_templates(:unescaped_ampersand)
+        assert tmpl.valid?
+      end
     end
     
   end
