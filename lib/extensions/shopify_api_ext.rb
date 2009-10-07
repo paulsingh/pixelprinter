@@ -6,7 +6,7 @@ module ShopifyAPI
   end
 
   
-  class Shop < ActiveResource::Base
+  class Shop < Base
     cattr_accessor :cached
     
     def to_liquid
@@ -24,7 +24,7 @@ module ShopifyAPI
     end
   end               
 
-  class Address < ActiveResource::Base
+  class Address < Base
     def to_liquid
       address_hash = Hash.from_xml(to_xml)
       # is either shipping address or billing address
@@ -44,7 +44,7 @@ module ShopifyAPI
   class BillingAddress < Address
   end         
 
-  class Order < ActiveResource::Base
+  class Order < Base
     include OrderCalculations
     include PriceConversion
     
@@ -103,7 +103,7 @@ module ShopifyAPI
     end
   end
   
-  class LineItem < ActiveResource::Base
+  class LineItem < Base
     include PriceConversion
 
     def to_liquid
@@ -123,49 +123,58 @@ module ShopifyAPI
     end
     
     def variant
-      @variant ||= Variant.lookup(variant_id)
+      @variant ||= Variant.lookup(variant_id, product_id)
     end
     
     def product
-      @product ||= Product.lookup(variant.product_id)
+      @product ||= Product.lookup(product_id)
     end
   end       
 
 
-  class Product < ActiveResource::Base
+  class Product < Base
     def self.lookup(id)
       Rails.cache.fetch("products/#{id}", :expires_in => 1.hour) do
         find(id)
       end
     end
     
-    # truncated (as opposed to Shopify's model) for simplicity
     def to_liquid
       {
         'id'                      => id,
         'title'                   => title,
         'handle'                  => handle,
+        'content'                 => body_html,
         'description'             => body_html,
         'vendor'                  => vendor,
         'type'                    => product_type,
-        'variants'                => variants, 
-        'images'                  => images
+        'variants'                => variants.collect(&:to_liquid), 
+        'images'                  => images.collect(&:to_liquid),
+        'featured_image'          => images.first,
+        'tags'                    => all_tags,
+        'price'                   => price_range,
+        'url'                     => "/products/#{handle}",
+        'options'                 => options
       }
     end
+    
+    def all_tags
+      tags.blank? ? [] : tags.split(",").collect(&:strip)
+    end    
   end
   
-  class Image < ActiveResource::Base
+  class Image < Base
     def to_liquid      
-      {'src' => src.match(/\/(products\/.*)\?/)[0]}
+      src.match(/\/(products\/.*)\?/)[0]
     end
   end
   
   
-  class Variant < ActiveResource::Base
+  class Variant < Base
     include PriceConversion
-
-    def self.lookup(id)
-      Rails.cache.fetch("variants/#{id}", :expires_in => 1.hour) do
+    
+    def self.lookup(id, product_id)
+      Rails.cache.fetch("products/#{product_id}/variants/#{id}", :expires_in => 1.hour) do
         find(id)
       end
     end
@@ -188,7 +197,7 @@ module ShopifyAPI
   end
 
 
-  class ShippingLine < ActiveResource::Base
+  class ShippingLine < Base
     include PriceConversion
 
     def to_liquid
@@ -197,7 +206,7 @@ module ShopifyAPI
   end
 
   
-  class TaxLine < ActiveResource::Base
+  class TaxLine < Base
      include PriceConversion
      
      def to_liquid

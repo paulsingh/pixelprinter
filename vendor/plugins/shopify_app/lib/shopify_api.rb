@@ -164,7 +164,7 @@ module ShopifyAPI
   #
   class Shop < Base
     def self.current
-      ActiveResource::Base.find(:one, :from => "/admin/shop.xml")
+      find(:one, :from => "/admin/shop.xml")
     end
   end               
 
@@ -195,13 +195,28 @@ module ShopifyAPI
   class Collect < Base
   end
 
-  class ShippingAddress < Base
+  class Address < Base
+    def street
+      string = address1
+      string += " #{address2}" if address2
+      string
+    end  
+  end
+  
+  class ShippingAddress < Address
   end
 
-  class BillingAddress < Base
+  class BillingAddress < Address
   end         
 
   class LineItem < Base 
+    def variant
+      Variant.find(variant_id, :params => {:product_id => product_id})
+    end
+    
+    def product
+      Product.find(variant.product_id)
+    end
   end       
 
   class ShippingLine < Base
@@ -254,10 +269,22 @@ module ShopifyAPI
     def remove_from_collection(collection)
       collection.remove_product(self)
     end
+    
+    def variants
+      Variant.find(:all, :params => {:product_id => self.id})
+    end
+    
+    def images
+      Image.find(:all, :params => {:product_id => self.id})
+    end
   end
   
   class Variant < Base
     self.prefix = "/admin/products/:product_id/"
+    
+    def product
+      Product.find(product_id)
+    end
   end
   
   class Image < Base
