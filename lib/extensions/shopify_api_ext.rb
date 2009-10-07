@@ -154,7 +154,7 @@ module ShopifyAPI
         'tags'                    => all_tags,
         'price'                   => price_range,
         'url'                     => "/products/#{handle}",
-        'options'                 => options
+        'options'                 => options.collect(&:name)
       }
     end
     
@@ -175,7 +175,7 @@ module ShopifyAPI
     
     def self.lookup(id, product_id)
       Rails.cache.fetch("products/#{product_id}/variants/#{id}", :expires_in => 1.hour) do
-        find(id)
+        find(id, {:params => {:product_id => product_id}})
       end
     end
 
