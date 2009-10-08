@@ -215,7 +215,7 @@ module ShopifyAPI
     end
     
     def product
-      Product.find(variant.product_id)
+      Product.find(product_id)
     end
   end       
 

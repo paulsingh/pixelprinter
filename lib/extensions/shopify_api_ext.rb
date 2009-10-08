@@ -154,7 +154,7 @@ module ShopifyAPI
         'tags'                    => all_tags,
         'price'                   => price_range,
         'url'                     => "/products/#{handle}",
-        'options'                 => options.collect{|o| o.name if o.respond_to?(:name)}
+        'options'                 => options.collect(&:name)
       }
     end
     
