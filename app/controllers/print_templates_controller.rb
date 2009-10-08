@@ -33,7 +33,10 @@ class PrintTemplatesController < ApplicationController
     if @tmpl.save
       # render RJS template
     else
-      render :js => "Messenger.error(\"#{@tmpl.errors.full_messages.to_sentence}.\");"
+      render :update do |page|
+        error = @tmpl.errors.full_messages.to_sentence
+        page << "Messenger.error(\"Error: #{escape_javascript(error)}.\");"
+      end
     end
   end
 
@@ -50,7 +53,10 @@ class PrintTemplatesController < ApplicationController
     if @tmpl.update_attributes(params[:print_template])
       # render RJS template
     else
-      render :js => "Messenger.error(\"#{@tmpl.errors.full_messages.to_sentence}.\");"
+      render :update do |page|
+        error = @tmpl.errors.full_messages.to_sentence
+        page << "Messenger.error(\"Error: #{escape_javascript(error)}.\");"
+      end
     end
   end 
 
