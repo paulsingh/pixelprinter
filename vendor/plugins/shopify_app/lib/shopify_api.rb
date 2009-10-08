@@ -110,7 +110,7 @@ module ShopifyAPI
         end
       end
 
-      self.class.prepare_url(self.url)
+      self.class.prepare_url(self.url) unless url.blank?
     end
     
     def shop
