@@ -218,4 +218,16 @@ module ShopifyAPI
      end
    end  
   
+  # TODO: remove this, and see if Heroku still can't find ShopifyAPI::Product::Option (it worked locally somehow with adding theclass)
+  class Product < Base
+    class Option < Base
+      def to_liquid
+        name
+      end
+      
+      def to_s
+        name
+      end   
+    end
+  end
 end
