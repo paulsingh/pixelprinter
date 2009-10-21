@@ -269,14 +269,6 @@ module ShopifyAPI
     def remove_from_collection(collection)
       collection.remove_product(self)
     end
-    
-    def variants
-      Variant.find(:all, :params => {:product_id => self.id})
-    end
-    
-    def images
-      Image.find(:all, :params => {:product_id => self.id})
-    end
   end
   
   class Variant < Base
