@@ -89,7 +89,7 @@ module ShopifyAPI
         'attributes'        => note_attributes, 
         'customer'          => {'email' => email, 'name' => billing_address.name},
         'shop'              => shop.to_liquid,
-        'total_discounts'   => total_discounts
+        'total_discounts'   => to_cents(total_discounts)
       }
     end    
     
