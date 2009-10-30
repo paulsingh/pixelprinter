@@ -96,8 +96,7 @@ module ShopifyAPI
     private
     
     def note_attributes
-      return nil unless super.is_a?(ActiveResource::Base)
-      [super.attributes['note_attribute']].flatten.inject({}) do |memo, attr|
+      [attributes['note_attributes']].flatten.inject({}) do |memo, attr|
         memo[attr.name] = attr.value
         memo
       end
