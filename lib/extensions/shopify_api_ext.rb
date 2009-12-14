@@ -89,7 +89,8 @@ module ShopifyAPI
         'attributes'        => note_attributes, 
         'customer'          => {'email' => email, 'name' => billing_address.name},
         'shop'              => shop.to_liquid,
-        'total_discounts'   => to_cents(total_discounts)
+        'total_discounts'   => to_cents(total_discounts),
+        'credit_card'       => payment_details
       }
     end    
     
@@ -100,6 +101,11 @@ module ShopifyAPI
         memo[attr.name] = attr.value
         memo
       end
+    end
+    
+    def payment_details
+      details = attributes['payment_details']
+      {'number' => details && details.credit_card_number, 'company' => details && details.credit_card_company}
     end
   end
   
