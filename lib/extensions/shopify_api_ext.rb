@@ -1,7 +1,7 @@
 module ShopifyAPI
   module PriceConversion
     def to_cents(amount)
-      (amount.to_f * 100).to_i
+      (amount.to_f * 100).round
     end  
   end
 
