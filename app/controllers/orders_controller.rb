@@ -27,6 +27,14 @@ class OrdersController < ApplicationController
     respond_to do |format|
       format.html do
         @tmpls = shop.templates
+        
+        # setup the snailpad object, only if the user has entered their API key
+        if shop.snailpad_api_key
+          apiauth = SnailMailer::APIAuth.new(shop.snailpad_api_key)
+          @snailpad = SnailMailer::Base.new(apiauth)
+        else
+          @snailpad = nil
+        end
       end
       format.js do
         # AJAX preview, loads in modal Dialog

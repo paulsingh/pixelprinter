@@ -30,7 +30,12 @@
 
   <div class="sidebar-block clearfix" id="print-button" > <!-- print -->
     <%= link_to_function image_tag("button-print.png"), "Templates.print()", :style => "margin: 10px 0 0px 0" %>
-    <p style="font-size: 12px; 	text-align: center;"><%= content_tag :span, "0 documents", :id => "template-amount" %> will be printed.</p>
+    <% if @snailpad %>
+      <p style="font-size: 12px; text-align: center;"><%= link_to_function "Print & Mail", "", :style => "margin: 10px 0 0px 0" %></p>
+    <% else %>
+      <p style="font-size: 12px; text-align: center;"><%= link_to_function "Setup SnailPad", "", :style => "margin: 10px 0 0px 0" %>
+    <% end %>
+    <p style="font-size: 12px; text-align: center;"><%= content_tag :span, "0 documents", :id => "template-amount" %> will be printed.</p>
 	</div><!-- last sidebar block -->
 
 	<img src="../images/logo.png"  alt="Logo" class="logo"   />
