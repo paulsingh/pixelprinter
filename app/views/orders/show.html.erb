@@ -30,16 +30,21 @@
 
   <div class="sidebar-block clearfix" id="print-button" > <!-- print -->
     <%= link_to_function image_tag("button-print.png"), "Templates.print()", :style => "margin: 10px 0 0px 0" %>
-    <% if @snailpad %>
-      <p style="font-size: 12px; text-align: center;"><%= link_to_function "Print & Mail", "", :style => "margin: 10px 0 0px 0" %></p>
-    <% else %>
-      <p style="font-size: 12px; text-align: center;"><%= link_to_function "Setup SnailPad", "", :style => "margin: 10px 0 0px 0" %>
-    <% end %>
+    <div id="snailpad">
+      <%= render :partial => "snailpad", :locals => { :has_api_key => @snailpad } %>
+    </div>
     <p style="font-size: 12px; text-align: center;"><%= content_tag :span, "0 documents", :id => "template-amount" %> will be printed.</p>
 	</div><!-- last sidebar block -->
 
 	<img src="../images/logo.png"  alt="Logo" class="logo"   />
 </div><!--sidebar-->
+
+<div id="snailpad-modal-dialog">
+  <% remote_form_for :shop, :url => snailpad_api_key_orders_path do |f| %>
+    <%= f.text_field :snailpad_api_key %>
+    <%= submit_tag 'Create' %>
+  <% end %>
+</div>
 
 <!-- This is populated later via AJAX and popped up with the dialog function of JQueryUI -->
 <div id="modal-dialog"></div>

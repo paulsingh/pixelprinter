@@ -1,7 +1,17 @@
 class OrdersController < ApplicationController
   protect_from_forgery :except => 'print'
   
-  around_filter :shopify_session
+  around_filter :shopify_session, :except => :snailpad_api_key
+
+  def snailpad_api_key
+    if params[:shop]
+      shop.update_attributes(params[:shop])
+      render :update do |page|
+        page.remove "snailpad-modal-dialog"
+        page.replace_html 'snailpad', :partial => "snailpad", :locals => { :has_api_key => true }
+      end
+    end
+  end
 
 
   def index
@@ -33,7 +43,7 @@ class OrdersController < ApplicationController
           apiauth = SnailMailer::APIAuth.new(shop.snailpad_api_key)
           @snailpad = SnailMailer::Base.new(apiauth)
         else
-          @snailpad = nil
+          # @shop = shop
         end
       end
       format.js do
