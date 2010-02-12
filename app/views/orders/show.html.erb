@@ -39,7 +39,7 @@
 	<img src="../images/logo.png"  alt="Logo" class="logo"   />
 </div><!--sidebar-->
 
-<div id="snailpad-modal-dialog">
+<div id="snailpad-modal-dialog" style="display:none">
   <% remote_form_for :shop, :url => snailpad_api_key_orders_path do |f| %>
     <%= f.text_field :snailpad_api_key %>
     <%= submit_tag 'Create' %>

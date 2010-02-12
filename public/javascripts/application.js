@@ -108,6 +108,14 @@ Templates = function() {
 			window.print();
 		},
 
+            snailpad_print: function() {
+                Status.show();
+                $.post('/orders/' + _order + '/snailpad_print',
+                       $("#selected-templates").serialize(),
+                       function() { Status.hide(); });
+                // TODO report success/fail
+            },
+
 		select: function(template, selection) {
 			var checkbox = $('#template-item-' + template + " :checkbox");
 			checkbox.attr('checked', selection);
@@ -262,3 +270,10 @@ Status = function() {
 		
 	};
 }();
+
+
+
+Snailpad_Print = function() {
+    $.post(window.location.pathname + "/snailpad_print",
+           {});
+};

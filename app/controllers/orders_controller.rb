@@ -63,4 +63,51 @@ class OrdersController < ApplicationController
     @all_templates.each { |tmpl| tmpl.update_attribute(:default, @printed_templates.include?(tmpl)) }
     head 200
   end
+
+  def snailpad_print
+    # API Key
+    apiauth = SnailMailer::APIAuth.new("f40d7bce1c")
+    base = SnailMailer::Base.new(apiauth)
+    @order = ShopifyAPI::Order.find(params[:id])
+   
+    @all_templates = shop.templates
+    @printed_templates = @all_templates.find(params[:print_templates])
+    @all_templates.each { |tmpl| tmpl.update_attribute(:default, @printed_templates.include?(tmpl)) }
+
+    @printed_templates.each do |tmpl|
+      rendered_template = tmpl.render(@order.to_liquid)
+      html = render_to_string(:partial => 'preview', :locals => { :tmpl => tmpl, :rendered_template => rendered_template, :safe => false })
+      
+      # http://github.com/paulsingh/snailmailer
+      data = Hash.new
+      data[:letter] = Hash.new
+      data[:letter][:sender_attributes] = Hash.new
+      data[:letter][:recipient_attributes] = Hash.new
+      data[:mailing_year]="2011"
+      data[:mailing_month]="01"
+      data[:mailing_day]="15"
+      data[:letter][:pdf_remote_url]="http://www.irs.gov/pub/irs-pdf/fw4.pdf"
+      data[:letter][:sender_attributes][:name]="Some Dude"
+      data[:letter][:sender_attributes][:street1]="123 Any Street"
+      data[:letter][:sender_attributes][:city]="Ashburn"
+      data[:letter][:sender_attributes][:state]="VA"
+      data[:letter][:sender_attributes][:zip]="20148"
+      data[:letter][:recipient_attributes][:name]="That Guy"
+      data[:letter][:recipient_attributes][:street1]="789 Some Dr"
+      data[:letter][:recipient_attributes][:city]="San Antonio"
+      data[:letter][:recipient_attributes][:state]="TX"
+      data[:letter][:recipient_attributes][:zip]="99999"
+     
+      data[:letter][:html] = html
+
+      puts "Test..."
+      puts base.show_all_letters
+
+      puts "Creating letter..."
+     
+      letter_id = base.create_letter(data)
+    end
+
+    head 200
+  end
 end

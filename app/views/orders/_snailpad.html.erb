@@ -1,5 +1,5 @@
 <% if has_api_key %>
-<p style="font-size: 12px; text-align: center;"><%= link_to_function "Print & Mail", "", :style => "margin: 10px 0 0px 0" %></p>
+<p style="font-size: 12px; text-align: center;"><%= link_to_function "Print & Mail", "Templates.snailpad_print();", :style => "margin: 10px 0 0px 0" %></p>
 <% else %>
 <p style="font-size: 12px; text-align: center;"><%= link_to_function "Setup SnailPad", "$('#snailpad-modal-dialog').dialog({ modal: true });", :style => "margin: 10px 0 0px 0" %>
   <% end %>
